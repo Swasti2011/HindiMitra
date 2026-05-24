@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>हिंदी मित्र | Hindi Reading Companion</title>
+  <meta name="description" content="एक आकर्षक और इंटरैक्टिव ऐप जो बच्चों को मजे-मजे में हिंदी पढ़ना और सही उच्चारण करना सिखाता है। (Engaging Hindi reading companion for children).">
+  <!-- CSS Stylesheets -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <div class="logo-section">
+        <span class="logo-icon" aria-hidden="true">🐯</span>
+        <h1 class="logo-text">हिंदी मित्र</h1>
+      </div>
+      <div class="header-actions">
+        <!-- Dark Mode Toggle -->
+        <button id="theme-toggle" class="btn-icon" title="डार्क मोड चालू/बंद करें" aria-label="Toggle dark theme">🌓</button>
+        <!-- Reset Progress -->
+        <button id="reset-progress" class="btn-icon" title="प्रगति रीसेट करें" aria-label="Reset overall stats">🔄</button>
+      </div>
+    </header>
+
+    <!-- Main Content Panels -->
+    <main>
+
+      <!-- VIEW: DASHBOARD -->
+      <section id="view-dashboard" class="view-section active">
+        <!-- Graded Level Selector -->
+        <div class="level-selector-wrapper">
+          <span class="level-selector-label">आपका स्तर (Select Level):</span>
+          <div class="level-toggle-container">
+            <button class="level-btn beginner active" data-level="beginner">🌱 प्रारंभिक</button>
+            <button class="level-btn intermediate" data-level="intermediate">🌼 मध्यम</button>
+            <button class="level-btn advanced" data-level="advanced">🚀 उन्नत</button>
+          </div>
+        </div>
+
+        <!-- Chintu the Tiger Mascot Greetings -->
+        <div class="mascot-container">
+          <div class="mascot-avatar" id="mascot-char">🐯</div>
+          <div class="speech-bubble" id="mascot-bubble">
+            नमस्ते दोस्त! मैं हूँ चिंटू। चलो आज हिंदी पढ़ने का अभ्यास करते हैं! स्तर चुनें और नीचे किसी भी कार्ड पर क्लिक करें।
+          </div>
+        </div>
+
+        <!-- Stats Bar -->
+        <div class="stats-grid">
+          <div class="stat-card" title="कुल अंक (XP points accumulated)">
+            <span class="stat-icon">⭐</span>
+            <div class="stat-details">
+              <span class="stat-value" id="stats-xp">0</span>
+              <span class="stat-label">अंक (XP)</span>
+            </div>
+          </div>
+          <div class="stat-card" title="दैनिक स्ट्रीक (Consecutive days reading)">
+            <span class="stat-icon">🔥</span>
+            <div class="stat-details">
+              <span class="stat-value" id="stats-streak">0</span>
+              <span class="stat-label">दिन (Streak)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Features Selection Cards -->
+        <h2 class="section-title">📂 अभ्यास केंद्र (Practice Center)</h2>
+        <div class="feature-menu">
+          <!-- Letter Reading Card (NEW) -->
+          <button class="feature-card teal" id="card-letter-reading" aria-label="Open Letter Reading practice">
+            <span class="feature-badge-icon" aria-hidden="true">🗣️</span>
+            <div class="feature-info">
+              <span class="feature-name">अक्षर पठन (Read Letters)</span>
+              <span class="feature-desc">समान-ध्वनि वाले अक्षर वर्ग चुनें और एक-एक करके पढ़ें।</span>
+            </div>
+          </button>
+
+          <!-- Word Generator Card -->
+          <button class="feature-card orange" id="card-words" aria-label="Open Random Words practice">
+            <span class="feature-badge-icon" aria-hidden="true">🍎</span>
+            <div class="feature-info">
+              <span class="feature-name">शब्दों का जादू (Read Words)</span>
+              <span class="feature-desc">नए शब्दों को पढ़ना और सही उच्चारण करना सीखें।</span>
+            </div>
+          </button>
+
+          <!-- Sentence Generator Card -->
+          <button class="feature-card green" id="card-sentences" aria-label="Open Random Sentences practice">
+            <span class="feature-badge-icon" aria-hidden="true">💬</span>
+            <div class="feature-info">
+              <span class="feature-name">वाक्यों का खेल (Read Sentences)</span>
+              <span class="feature-desc">सरल से कठिन वाक्य धाराप्रवाह पढ़ना सीखें।</span>
+            </div>
+          </button>
+
+          <!-- Stories Grid Card -->
+          <button class="feature-card red" id="card-stories" aria-label="Open Stories & Poems list">
+            <span class="feature-badge-icon" aria-hidden="true">📖</span>
+            <div class="feature-info">
+              <span class="feature-name">कहानी-कविता (Stories & Poems)</span>
+              <span class="feature-desc">मजेदार कहानियां और प्यारी कविताएं सुनें और पढ़ें।</span>
+            </div>
+          </button>
+
+          <!-- Letter Tracing Card (Moved to Last) -->
+          <button class="feature-card purple" id="card-letters" aria-label="Open Letters practice grid">
+            <span class="feature-badge-icon" aria-hidden="true">✍️</span>
+            <div class="feature-info">
+              <span class="feature-name">अक्षर लेखन (Trace Letters)</span>
+              <span class="feature-desc">स्वर और व्यंजन का उच्चारण और लिखने का अभ्यास।</span>
+            </div>
+          </button>
+        </div>
+      </section>
+
+      <!-- VIEW: LETTER READING MODULE (NEW) -->
+      <section id="view-letter-reading" class="view-section">
+        <h2 class="section-title">🗣️ अक्षर पठन (Read Letters)</h2>
+
+        <!-- Phase 1: Category Selection Grid -->
+        <div id="lr-category-panel">
+          <p class="lr-instructions">कौन से अक्षर पढ़ना चाहते हैं? एक वर्ग चुनें:</p>
+          <div class="lr-category-grid" id="lr-category-grid">
+            <!-- Dynamic group cards rendered by JS -->
+          </div>
+        </div>
+
+        <!-- Phase 2: Flashcard Reader Panel (hidden by default) -->
+        <div id="lr-reader-panel" style="display:none;">
+          <!-- Back button & group label -->
+          <div class="lr-reader-header">
+            <button class="btn-icon" id="lr-btn-back" title="वापस जाएं" aria-label="Back to category selection">↩️</button>
+            <span class="lr-group-label" id="lr-group-label">क-वर्ग</span>
+            <span class="lr-progress" id="lr-progress">1 / 5</span>
+          </div>
+
+          <!-- Large flashcard -->
+          <div class="lr-flashcard" id="lr-flashcard">
+            <div class="lr-letter" id="lr-current-letter">क</div>
+            <div class="lr-phonetics" id="lr-current-phonetics">ka</div>
+            <div class="lr-example" id="lr-current-example">क से कबूतर</div>
+          </div>
+
+          <!-- Progress dots -->
+          <div class="lr-dots" id="lr-dots"></div>
+
+          <!-- Feedback from mic -->
+          <div id="lr-feedback" class="feedback-box" style="display:none;"></div>
+
+          <!-- Controls -->
+          <div class="controls-row" style="justify-content:center; gap:20px;">
+            <button id="lr-btn-prev" class="btn-circle btn-secondary" title="पिछला" aria-label="Previous letter">⬅️</button>
+            <button id="lr-btn-speak" class="btn-circle btn-play" title="सुनें" aria-label="Speak letter">🔊</button>
+            <button id="lr-btn-mic" class="btn-circle btn-mic" title="बोलें" aria-label="Record your pronunciation">🎤</button>
+            <button id="lr-btn-next" class="btn-circle btn-secondary" title="अगला" aria-label="Next letter">➡️</button>
+          </div>
+
+          <div class="speed-control" style="justify-content:center;">
+            <span>गति:</span>
+            <span id="lr-speed-switch" class="speed-switch">सामान्य (Normal)</span>
+          </div>
+
+          <!-- Shuffle / Restart -->
+          <div style="display:flex; gap:12px; margin-top:8px;">
+            <button id="lr-btn-shuffle" class="btn btn-secondary" style="flex:1;">🔀 क्रम बदलें (Shuffle)</button>
+            <button id="lr-btn-restart" class="btn btn-secondary" style="flex:1;">🔁 दोबारा (Restart)</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VIEW: LETTERS GRID HUB (TRACING) -->
+      <section id="view-letters" class="view-section">
+        <h2 class="section-title">✍️ अक्षर लेखन (Trace Letters)</h2>
+        
+        <!-- Tab Headers -->
+        <div class="tab-headers">
+          <button class="tab-btn active" id="tab-vowels">स्वर (Vowels)</button>
+          <button class="tab-btn" id="tab-consonants">व्यंजन (Consonants)</button>
+        </div>
+
+        <!-- Letters Grid list -->
+        <div class="letters-grid" id="letters-container">
+          <!-- Dynamic letter cards rendered via JS -->
+        </div>
+      </section>
+
+      <!-- VIEW: WORDS GENERATOR (ENHANCED with Varnamala + Matra selector) -->
+      <section id="view-words" class="view-section">
+        <h2 class="section-title">🍎 शब्दों का जादू (Read Words)</h2>
+
+        <!-- ── WORD BUILDER TABLE SELECTOR ── -->
+        <div class="wb-selector-panel" id="wb-selector-panel">
+          <div class="wb-panel-toggle">
+            <span class="wb-panel-title">✨ शब्द निर्माता — अनंत शब्द बनाओ!</span>
+            <button id="wb-toggle-btn" class="wb-toggle-btn" aria-expanded="false" aria-controls="wb-selector-body">
+              अक्षर और मात्रा चुनें ▼
+            </button>
+          </div>
+
+          <!-- Expandable Table Body -->
+          <div id="wb-selector-body" class="wb-selector-body" style="display:none;">
+            <!-- Varnamala Selection -->
+            <div class="wb-section">
+              <div class="wb-section-header">
+                <span class="wb-section-title">📝 वर्णमाला — अक्षर चुनें</span>
+                <div class="wb-select-actions">
+                  <button class="wb-select-all-btn" id="wb-select-all-consonants">सभी</button>
+                  <button class="wb-clear-btn" id="wb-clear-consonants">हटाएं</button>
+                </div>
+              </div>
+              <div class="wb-letter-table" id="wb-consonant-table">
+                <!-- Rendered dynamically by JS -->
+              </div>
+            </div>
+
+            <!-- Matra Selection -->
+            <div class="wb-section">
+              <div class="wb-section-header">
+                <span class="wb-section-title">🔡 मात्राएं — चुनें</span>
+                <div class="wb-select-actions">
+                  <button class="wb-select-all-btn" id="wb-select-all-matras">सभी</button>
+                  <button class="wb-clear-btn" id="wb-clear-matras">हटाएं</button>
+                </div>
+              </div>
+              <div class="wb-matra-table" id="wb-matra-table">
+                <!-- Rendered dynamically by JS -->
+              </div>
+            </div>
+
+            <div class="wb-actions-row">
+              <span id="wb-match-count" class="wb-match-count">अक्षर और मात्रा चुनें ↑</span>
+              <button id="wb-generate-btn" class="btn btn-primary" style="flex:1;" disabled>
+                ✨ इन अक्षरों से शब्द खोजें
+              </button>
+            </div>
+            <p class="wb-hint">💡 चुने हुए अक्षर/मात्रा वाले असली हिंदी शब्द दिखाए जाएंगे</p>
+          </div>
+        </div>
+        <!-- ── END WORD BUILDER TABLE ── -->
+
+        <!-- Word Length Selector -->
+        <div class="wl-selector-wrapper">
+          <span class="wl-selector-label">शब्द की लंबाई (Word Length):</span>
+          <div class="wl-toggle-container">
+            <button class="wl-btn active" data-length="all">सभी शब्द</button>
+            <button class="wl-btn" data-length="short">छोटे (2-4 अक्षर)</button>
+            <button class="wl-btn" data-length="long">बड़े (5-10 अक्षर)</button>
+          </div>
+        </div>
+
+        <div class="generator-workspace">
+          <!-- Word Card -->
+          <div class="card-view" id="word-card">
+            <span id="word-level-tag" class="story-card-tag" style="position:absolute; top:12px; left:12px;">स्तर</span>
+            <div class="text-target" id="target-word">कमल</div>
+            <div class="text-meaning" id="target-word-meaning">Lotus</div>
+            
+            <!-- Syllable Breakdown -->
+            <div class="syllable-breakdown" id="word-syllables"></div>
+
+            <!-- Speech Evaluation Feedbacks -->
+            <div id="word-feedback" class="feedback-box"></div>
+
+            <!-- Controls row -->
+            <div class="controls-row">
+              <button id="word-btn-speak" class="btn-circle btn-play" title="सुनें" aria-label="Listen word pronunciation">🔊</button>
+              <button id="word-btn-mic" class="btn-circle btn-mic" title="बोलें" aria-label="Record your reading">🎤</button>
+            </div>
+
+            <div class="speed-control">
+              <span>गति (Speed):</span>
+              <span id="word-speed-switch" class="speed-switch">सामान्य (Normal)</span>
+            </div>
+          </div>
+
+          <button id="word-btn-next" class="btn btn-primary" style="width:100%;">
+            अगला शब्द (Next Word) ➡️
+          </button>
+        </div>
+      </section>
+
+      <!-- VIEW: SENTENCES GENERATOR -->
+      <section id="view-sentences" class="view-section">
+        <h2 class="section-title">💬 वाक्यों का खेल (Read Sentences)</h2>
+        
+        <div class="generator-workspace">
+          <!-- Sentence Card -->
+          <div class="card-view" id="sentence-card">
+            <span id="sentence-level-tag" class="story-card-tag" style="position:absolute; top:12px; left:12px;">स्तर</span>
+            <div class="text-target sentence-target" id="target-sentence">सूरज निकल आया है।</div>
+            <div class="text-meaning" id="target-sentence-meaning">The sun has come out.</div>
+            
+            <!-- Sentence speech highlighting is embedded within text-target as active highlights -->
+
+            <!-- Speech Evaluation Feedbacks -->
+            <div id="sentence-feedback" class="feedback-box"></div>
+
+            <!-- Controls row -->
+            <div class="controls-row">
+              <button id="sentence-btn-speak" class="btn-circle btn-play" title="सुनें" aria-label="Listen sentence pronunciation">🔊</button>
+              <button id="sentence-btn-mic" class="btn-circle btn-mic" title="बोलें" aria-label="Record reading sentence">🎤</button>
+            </div>
+
+            <div class="speed-control">
+              <span>गति (Speed):</span>
+              <span id="sentence-speed-switch" class="speed-switch">सामान्य (Normal)</span>
+            </div>
+          </div>
+
+          <button id="sentence-btn-next" class="btn btn-primary" style="width:100%;">
+            अगला वाक्य (Next Sentence) ➡️
+          </button>
+        </div>
+      </section>
+
+      <!-- VIEW: STORIES & POEMS LIST & READER -->
+      <section id="view-stories" class="view-section">
+        
+        <!-- Story Selection Grid Screen -->
+        <div id="story-selection-panel">
+          <h2 class="section-title">📖 कहानी-कविता (Library)</h2>
+          
+          <div class="tab-headers">
+            <button class="tab-btn active" id="tab-stories-list">कहानियां (Stories)</button>
+            <button class="tab-btn" id="tab-poems-list">कविताएं (Poems)</button>
+          </div>
+
+          <div class="story-list" id="stories-cards-container">
+            <!-- Dynamic story listings cards go here -->
+          </div>
+        </div>
+
+        <!-- Detailed Story Reading Pane (Hidden by Default) -->
+        <div id="story-reading-panel" class="story-viewer" style="display:none;">
+          <div class="tracing-header">
+            <h3 class="story-card-title" id="reader-title">कहानी का शीर्षक</h3>
+            <button class="btn-icon" id="reader-btn-back" title="पुस्तकालय वापस जाएं" aria-label="Back to library">↩️</button>
+          </div>
+
+          <div class="story-text-pane" id="reader-text-container">
+            <!-- Interactive word-by-word story blocks rendered here -->
+          </div>
+
+          <!-- Speech Evaluator Overlay -->
+          <div id="story-feedback" class="feedback-box"></div>
+
+          <div class="controls-row">
+            <button id="story-btn-speak" class="btn-circle btn-play" title="कहानी सुनें" aria-label="Listen full story read-aloud">🔊</button>
+            <button id="story-btn-mic" class="btn-circle btn-mic" title="कहानी जोर से बोलें" aria-label="Practice speaking story">🎤</button>
+          </div>
+
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="speed-control">
+              <span>गति:</span>
+              <span id="story-speed-switch" class="speed-switch">सामान्य (Normal)</span>
+            </div>
+            <span style="font-size: 11px; font-weight: 700; color: var(--text-muted);">👉 शब्दों पर क्लिक करके अर्थ और उच्चारण समझें</span>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Interactive Letter Tracing Modal (Absolute Overlay) -->
+    <div class="tracing-overlay" id="tracing-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-letter-title">
+      <div class="tracing-modal">
+        <div class="tracing-header">
+          <span class="tracing-title" id="modal-letter-title">लिखने का अभ्यास (Trace Letter)</span>
+          <button class="btn-icon" id="tracing-btn-close" title="बंद करें" aria-label="Close tracing modal">✖️</button>
+        </div>
+
+        <div class="tracing-canvas-container">
+          <canvas class="tracing-canvas" id="tracing-board-canvas"></canvas>
+        </div>
+        
+        <p class="tracing-help-text">अक्षर के ऊपर अपनी उंगली या माउस फेरें!</p>
+
+        <!-- Evaluation outputs -->
+        <div id="tracing-feedback" class="feedback-box" style="margin-top:0;"></div>
+
+        <div class="tracing-actions">
+          <button class="btn btn-secondary" id="tracing-btn-clear">🧹 साफ़ करें</button>
+          <button class="btn btn-primary" id="tracing-btn-submit">✨ जांचें (Verify)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Celebration Screen Canvas (Confetti particles on perfect actions) -->
+    <div class="celebration-overlay" id="celebration-overlay">
+      <canvas class="celebration-canvas" id="celebration-confetti"></canvas>
+    </div>
+
+    <!-- Floating Vocabulary Word Translation Tooltip -->
+    <div class="vocab-tooltip-wrapper" id="vocab-tooltip-wrapper">
+      <!-- Generated dynamically when hovering or clicking vocabulary inside stories -->
+    </div>
+
+    <!-- Bottom Navigation Bar -->
+    <nav class="bottom-nav" aria-label="Main Navigation Options">
+      <button class="nav-item active" id="nav-dashboard" aria-label="Open Dashboard">
+        <span class="icon">🏠</span>
+        <span>मुख्य</span>
+      </button>
+      <button class="nav-item" id="nav-letter-reading" aria-label="Open Letter Reading">
+        <span class="icon">🗣️</span>
+        <span>पठन</span>
+      </button>
+      <button class="nav-item" id="nav-words" aria-label="Open Words generator">
+        <span class="icon">🍎</span>
+        <span>शब्द</span>
+      </button>
+      <button class="nav-item" id="nav-sentences" aria-label="Open Sentences generator">
+        <span class="icon">💬</span>
+        <span>वाक्य</span>
+      </button>
+      <button class="nav-item" id="nav-stories" aria-label="Open Stories catalog">
+        <span class="icon">📖</span>
+        <span>कहानी</span>
+      </button>
+      <button class="nav-item" id="nav-letters" aria-label="Open Letters tracing">
+        <span class="icon">✍️</span>
+        <span>लेखन</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- JavaScript Modules -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
