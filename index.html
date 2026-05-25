@@ -18,6 +18,16 @@
         <span class="logo-icon" aria-hidden="true">🐯</span>
         <h1 class="logo-text">हिंदी मित्र</h1>
       </div>
+
+      <!-- Dropdown Level Selector -->
+      <div class="level-dropdown-wrapper">
+        <select id="global-level-select" class="level-dropdown" aria-label="कठिनाई स्तर चुनें">
+          <option value="beginner">🌱 प्रारंभिक</option>
+          <option value="intermediate">🌼 मध्यम</option>
+          <option value="advanced">🚀 उन्नत</option>
+        </select>
+      </div>
+
       <div class="header-actions">
         <!-- Dark Mode Toggle -->
         <button id="theme-toggle" class="btn-icon" title="डार्क मोड चालू/बंद करें" aria-label="Toggle dark theme">🌓</button>
@@ -31,15 +41,6 @@
 
       <!-- VIEW: DASHBOARD -->
       <section id="view-dashboard" class="view-section active">
-        <!-- Graded Level Selector -->
-        <div class="level-selector-wrapper">
-          <span class="level-selector-label">आपका स्तर (Select Level):</span>
-          <div class="level-toggle-container">
-            <button class="level-btn beginner active" data-level="beginner">🌱 प्रारंभिक</button>
-            <button class="level-btn intermediate" data-level="intermediate">🌼 मध्यम</button>
-            <button class="level-btn advanced" data-level="advanced">🚀 उन्नत</button>
-          </div>
-        </div>
 
         <!-- Chintu the Tiger Mascot Greetings -->
         <div class="mascot-container">
@@ -140,6 +141,7 @@
 
           <!-- Large flashcard -->
           <div class="lr-flashcard" id="lr-flashcard">
+            <button class="toggle-translation-btn" data-tooltip="गाइड छिपाएं/दिखाएं [ / ]" data-tooltip-pos="bottom" aria-label="Toggle phonetics">👁️</button>
             <div class="lr-letter" id="lr-current-letter">क</div>
             <div class="lr-phonetics" id="lr-current-phonetics">ka</div>
             <div class="lr-example" id="lr-current-example">क से कबूतर</div>
@@ -153,10 +155,10 @@
 
           <!-- Controls -->
           <div class="controls-row" style="justify-content:center; gap:20px;">
-            <button id="lr-btn-prev" class="btn-circle btn-secondary" title="पिछला" aria-label="Previous letter">⬅️</button>
-            <button id="lr-btn-speak" class="btn-circle btn-play" title="सुनें" aria-label="Speak letter">🔊</button>
-            <button id="lr-btn-mic" class="btn-circle btn-mic" title="बोलें" aria-label="Record your pronunciation">🎤</button>
-            <button id="lr-btn-next" class="btn-circle btn-secondary" title="अगला" aria-label="Next letter">➡️</button>
+            <button id="lr-btn-prev" class="btn-circle btn-secondary" title="पिछला" aria-label="Previous letter" data-tooltip="पिछला (Prev) [← Left Arrow]">⬅️</button>
+            <button id="lr-btn-speak" class="btn-circle btn-play" title="सुनें" aria-label="Speak letter" data-tooltip="उच्चारण सुनें [↑ Up Arrow]">🔊</button>
+            <button id="lr-btn-mic" class="btn-circle btn-mic" title="बोलें" aria-label="Record your pronunciation" data-tooltip="बोलकर अभ्यास करें [↓ Down Arrow]">🎤</button>
+            <button id="lr-btn-next" class="btn-circle btn-secondary" title="अगला" aria-label="Next letter" data-tooltip="अगला (Next) [→ Right Arrow]">➡️</button>
           </div>
 
           <div class="speed-control" style="justify-content:center;">
@@ -255,7 +257,10 @@
         <div class="generator-workspace">
           <!-- Word Card -->
           <div class="card-view" id="word-card">
-            <span id="word-level-tag" class="story-card-tag" style="position:absolute; top:12px; left:12px;">स्तर</span>
+            <div class="card-header-left">
+              <span id="word-level-tag" class="story-card-tag">स्तर</span>
+              <button class="toggle-translation-btn" data-tooltip="अनुवाद छिपाएं/दिखाएं [ / ]" data-tooltip-pos="bottom" aria-label="Toggle translation">👁️</button>
+            </div>
             <div class="text-target" id="target-word">कमल</div>
             <div class="text-meaning" id="target-word-meaning">Lotus</div>
             
@@ -267,19 +272,24 @@
 
             <!-- Controls row -->
             <div class="controls-row">
-              <button id="word-btn-speak" class="btn-circle btn-play" title="सुनें" aria-label="Listen word pronunciation">🔊</button>
-              <button id="word-btn-mic" class="btn-circle btn-mic" title="बोलें" aria-label="Record your reading">🎤</button>
+              <button id="word-btn-speak" class="btn-circle btn-play" title="सुनें" aria-label="Listen word pronunciation" data-tooltip="उच्चारण सुनें [↑ Up Arrow]">🔊</button>
+              <button id="word-btn-mic" class="btn-circle btn-mic" title="बोलें" aria-label="Record your reading" data-tooltip="बोलकर अभ्यास करें [↓ Down Arrow]">🎤</button>
             </div>
 
             <div class="speed-control">
-              <span>गति (Speed):</span>
+              <span> गति (Speed):</span>
               <span id="word-speed-switch" class="speed-switch">सामान्य (Normal)</span>
             </div>
           </div>
 
-          <button id="word-btn-next" class="btn btn-primary" style="width:100%;">
-            अगला शब्द (Next Word) ➡️
-          </button>
+          <div style="display:flex; gap:12px; width:100%;">
+            <button id="word-btn-prev" class="btn btn-secondary" style="flex:1;" data-tooltip="पिछला शब्द [← Left Arrow]">
+              ⬅️ पिछला (Prev)
+            </button>
+            <button id="word-btn-next" class="btn btn-primary" style="flex:1.5;" data-tooltip="अगला शब्द [→ Right Arrow]">
+              अगला शब्द (Next) ➡️
+            </button>
+          </div>
         </div>
       </section>
 
@@ -290,7 +300,10 @@
         <div class="generator-workspace">
           <!-- Sentence Card -->
           <div class="card-view" id="sentence-card">
-            <span id="sentence-level-tag" class="story-card-tag" style="position:absolute; top:12px; left:12px;">स्तर</span>
+            <div class="card-header-left">
+              <span id="sentence-level-tag" class="story-card-tag">स्तर</span>
+              <button class="toggle-translation-btn" data-tooltip="अनुवाद छिपाएं/दिखाएं [ / ]" data-tooltip-pos="bottom" aria-label="Toggle translation">👁️</button>
+            </div>
             <div class="text-target sentence-target" id="target-sentence">सूरज निकल आया है।</div>
             <div class="text-meaning" id="target-sentence-meaning">The sun has come out.</div>
             
@@ -301,8 +314,8 @@
 
             <!-- Controls row -->
             <div class="controls-row">
-              <button id="sentence-btn-speak" class="btn-circle btn-play" title="सुनें" aria-label="Listen sentence pronunciation">🔊</button>
-              <button id="sentence-btn-mic" class="btn-circle btn-mic" title="बोलें" aria-label="Record reading sentence">🎤</button>
+              <button id="sentence-btn-speak" class="btn-circle btn-play" title="सुनें" aria-label="Listen sentence pronunciation" data-tooltip="उच्चारण सुनें [↑ Up Arrow]">🔊</button>
+              <button id="sentence-btn-mic" class="btn-circle btn-mic" title="बोलें" aria-label="Record reading sentence" data-tooltip="बोलकर अभ्यास करें [↓ Down Arrow]">🎤</button>
             </div>
 
             <div class="speed-control">
@@ -311,9 +324,14 @@
             </div>
           </div>
 
-          <button id="sentence-btn-next" class="btn btn-primary" style="width:100%;">
-            अगला वाक्य (Next Sentence) ➡️
-          </button>
+          <div style="display:flex; gap:12px; width:100%;">
+            <button id="sentence-btn-prev" class="btn btn-secondary" style="flex:1;" data-tooltip="पिछला वाक्य [← Left Arrow]">
+              ⬅️ पिछला (Prev)
+            </button>
+            <button id="sentence-btn-next" class="btn btn-primary" style="flex:1.5;" data-tooltip="अगला वाक्य [→ Right Arrow]">
+              अगला वाक्य (Next) ➡️
+            </button>
+          </div>
         </div>
       </section>
 
@@ -349,8 +367,8 @@
           <div id="story-feedback" class="feedback-box"></div>
 
           <div class="controls-row">
-            <button id="story-btn-speak" class="btn-circle btn-play" title="कहानी सुनें" aria-label="Listen full story read-aloud">🔊</button>
-            <button id="story-btn-mic" class="btn-circle btn-mic" title="कहानी जोर से बोलें" aria-label="Practice speaking story">🎤</button>
+            <button id="story-btn-speak" class="btn-circle btn-play" title="कहानी सुनें" aria-label="Listen full story read-aloud" data-tooltip="कहानी सुनें [↑ Up Arrow]">🔊</button>
+            <button id="story-btn-mic" class="btn-circle btn-mic" title="कहानी जोर से बोलें" aria-label="Practice speaking story" data-tooltip="कहानी बोलें [↓ Down Arrow]">🎤</button>
           </div>
 
           <div style="display:flex; justify-content:space-between; align-items:center;">

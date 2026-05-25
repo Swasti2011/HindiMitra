@@ -39,6 +39,7 @@ class HindiMitraApp {
       streak: 0,
       lastActiveDate: '',
       theme: 'light',
+      showTranslations: true,
       currentTab: 'vowels',
       activeWord: null,
       activeSentence: null,
@@ -46,6 +47,10 @@ class HindiMitraApp {
       storyType: 'stories',
       speedRate: 1.0,
       wordLength: 'all',     // 'all', 'short', 'long' (NEW)
+      wordHistory: [],
+      wordHistoryIndex: -1,
+      sentenceHistory: [],
+      sentenceHistoryIndex: -1,
       // Letter Reading Module
       lr: {
         group: null,          // currently selected group object
@@ -91,10 +96,115 @@ class HindiMitraApp {
   init() {
     this.loadState();
     this.initTheme();
+    this.applyTranslationsState();
     this.bindDOM();
     this.initConfetti();
+    this.initGlobalKeyListeners();
     this.renderDashboard();
     this.updateMascotGreeting("नमस्ते! मैं चिंटू टाइगर हूँ। चलो आज मिलकर हिंदी पढ़ें! 🐯📖");
+  }
+
+  initGlobalKeyListeners() {
+    document.addEventListener('keydown', e => {
+      // Ignore key events if focus is on input fields, textareas, or select dropdowns
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT' || e.target.isContentEditable) {
+        return;
+      }
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        this.handleGlobalBack();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        this.handleGlobalForward();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        this.handleGlobalSpeak();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        this.handleGlobalListen();
+      } else if (e.key === '/') {
+        e.preventDefault();
+        this.toggleTranslations();
+      }
+    });
+  }
+
+  handleGlobalBack() {
+    const activeSection = document.querySelector('.view-section.active');
+    if (!activeSection) return;
+    const viewId = activeSection.id;
+
+    if (viewId === 'view-letter-reading') {
+      const readerPanel = document.getElementById('lr-reader-panel');
+      if (readerPanel && readerPanel.style.display !== 'none') {
+        this.lrNavigate(-1);
+      }
+    } else if (viewId === 'view-words') {
+      this.generatePreviousWord();
+    } else if (viewId === 'view-sentences') {
+      this.generatePreviousSentence();
+    }
+  }
+
+  handleGlobalForward() {
+    const activeSection = document.querySelector('.view-section.active');
+    if (!activeSection) return;
+    const viewId = activeSection.id;
+
+    if (viewId === 'view-letter-reading') {
+      const readerPanel = document.getElementById('lr-reader-panel');
+      if (readerPanel && readerPanel.style.display !== 'none') {
+        this.lrNavigate(1);
+      }
+    } else if (viewId === 'view-words') {
+      this.generateNextWord();
+    } else if (viewId === 'view-sentences') {
+      this.generateNextSentence();
+    }
+  }
+
+  handleGlobalSpeak() {
+    const activeSection = document.querySelector('.view-section.active');
+    if (!activeSection) return;
+    const viewId = activeSection.id;
+
+    if (viewId === 'view-letter-reading') {
+      const readerPanel = document.getElementById('lr-reader-panel');
+      if (readerPanel && readerPanel.style.display !== 'none') {
+        this.lrSpeak();
+      }
+    } else if (viewId === 'view-words') {
+      this.speakActiveWord();
+    } else if (viewId === 'view-sentences') {
+      this.speakActiveSentence();
+    } else if (viewId === 'view-stories') {
+      const readerPanel = document.getElementById('story-reading-panel');
+      if (readerPanel && readerPanel.style.display !== 'none') {
+        this.speakActiveStory();
+      }
+    }
+  }
+
+  handleGlobalListen() {
+    const activeSection = document.querySelector('.view-section.active');
+    if (!activeSection) return;
+    const viewId = activeSection.id;
+
+    if (viewId === 'view-letter-reading') {
+      const readerPanel = document.getElementById('lr-reader-panel');
+      if (readerPanel && readerPanel.style.display !== 'none') {
+        this.lrListen();
+      }
+    } else if (viewId === 'view-words') {
+      this.listenWord();
+    } else if (viewId === 'view-sentences') {
+      this.listenSentence();
+    } else if (viewId === 'view-stories') {
+      const readerPanel = document.getElementById('story-reading-panel');
+      if (readerPanel && readerPanel.style.display !== 'none') {
+        this.listenStory();
+      }
+    }
   }
 
   // ─── STATE PERSISTENCE ────────────────────────────────────────────────────
@@ -108,6 +218,7 @@ class HindiMitraApp {
         this.state.streak = p.streak || 0;
         this.state.lastActiveDate = p.lastActiveDate || '';
         this.state.theme = p.theme || 'light';
+        this.state.showTranslations = p.showTranslations !== false;
       } catch (e) { /* ignore */ }
     }
     this.checkStreak();
@@ -119,7 +230,8 @@ class HindiMitraApp {
       xp: this.state.xp,
       streak: this.state.streak,
       lastActiveDate: this.state.lastActiveDate,
-      theme: this.state.theme
+      theme: this.state.theme,
+      showTranslations: this.state.showTranslations
     }));
     this.updateDashboardStats();
   }
@@ -158,6 +270,21 @@ class HindiMitraApp {
     this.initTheme();
     this.saveState();
   }
+  toggleTranslations() {
+    this.state.showTranslations = !this.state.showTranslations;
+    this.saveState();
+    this.applyTranslationsState();
+  }
+  applyTranslationsState() {
+    const isHidden = !this.state.showTranslations;
+    document.body.classList.toggle('hide-translations', isHidden);
+    document.querySelectorAll('.toggle-translation-btn').forEach(btn => {
+      btn.innerHTML = isHidden ? '🙈 अनुवाद दिखाएं' : '👁️ अनुवाद छिपाएं';
+      const tooltipMsg = isHidden ? "अनुवाद दिखाएं [ / ]" : "अनुवाद छिपाएं [ / ]";
+      btn.setAttribute('data-tooltip', tooltipMsg);
+      btn.setAttribute('title', tooltipMsg);
+    });
+  }
   resetAllProgress() {
     if (confirm("क्या आप अपनी सारी प्रगति और अंक शून्य करना चाहते हैं?")) {
       this.state.xp = 0;
@@ -172,6 +299,10 @@ class HindiMitraApp {
   bindDOM() {
     document.getElementById('theme-toggle').addEventListener('click', () => this.toggleTheme());
     document.getElementById('reset-progress').addEventListener('click', () => this.resetAllProgress());
+
+    document.querySelectorAll('.toggle-translation-btn').forEach(btn => {
+      btn.addEventListener('click', () => this.toggleTranslations());
+    });
 
     // Navigation
     const navMap = {
@@ -199,21 +330,32 @@ class HindiMitraApp {
     document.getElementById('card-stories').addEventListener('click', () =>
       this.switchView('view-stories', document.getElementById('nav-stories')));
 
-    // Level selector
-    document.querySelectorAll('.level-btn').forEach(btn => {
-      btn.addEventListener('click', e => {
-        document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        this.state.level = e.target.getAttribute('data-level');
+    // Level selector dropdown
+    const levelSelect = document.getElementById('global-level-select');
+    if (levelSelect) {
+      levelSelect.addEventListener('change', e => {
+        this.state.level = e.target.value;
         this.saveState();
         const phrases = this.mascotPhrases[this.state.level];
         this.updateMascotGreeting(phrases[Math.floor(Math.random() * phrases.length)]);
+
+        // Sync changes on active screens immediately
+        const activeSection = document.querySelector('.view-section.active');
+        if (activeSection) {
+          if (activeSection.id === 'view-words') {
+            this.generateRandomWord();
+          } else if (activeSection.id === 'view-sentences') {
+            this.generateRandomSentence();
+          } else if (activeSection.id === 'view-letter-reading') {
+            this.renderLetterReadingCategories();
+          } else if (activeSection.id === 'view-stories') {
+            this.renderStoriesCatalog();
+          }
+        }
       });
-    });
-    // Sync on load
-    document.querySelectorAll('.level-btn').forEach(btn => {
-      btn.classList.toggle('active', btn.getAttribute('data-level') === this.state.level);
-    });
+      // Sync on load
+      levelSelect.value = this.state.level;
+    }
 
     // Letters Hub tabs
     document.getElementById('tab-vowels').addEventListener('click', e =>
@@ -225,7 +367,8 @@ class HindiMitraApp {
     document.getElementById('word-btn-speak').addEventListener('click', () => this.speakActiveWord());
     document.getElementById('word-btn-mic').addEventListener('click',   () => this.listenWord());
     document.getElementById('word-speed-switch').addEventListener('click', () => this.toggleSpeed('word-speed-switch'));
-    document.getElementById('word-btn-next').addEventListener('click',  () => this.generateRandomWord());
+    document.getElementById('word-btn-prev').addEventListener('click',  () => this.generatePreviousWord());
+    document.getElementById('word-btn-next').addEventListener('click',  () => this.generateNextWord());
 
     // Word Length Selector (NEW)
     document.querySelectorAll('.wl-btn').forEach(btn => {
@@ -241,7 +384,8 @@ class HindiMitraApp {
     document.getElementById('sentence-btn-speak').addEventListener('click', () => this.speakActiveSentence());
     document.getElementById('sentence-btn-mic').addEventListener('click',   () => this.listenSentence());
     document.getElementById('sentence-speed-switch').addEventListener('click', () => this.toggleSpeed('sentence-speed-switch'));
-    document.getElementById('sentence-btn-next').addEventListener('click',  () => this.generateRandomSentence());
+    document.getElementById('sentence-btn-prev').addEventListener('click',  () => this.generatePreviousSentence());
+    document.getElementById('sentence-btn-next').addEventListener('click',  () => this.generateNextSentence());
 
     // Stories & Poems
     document.getElementById('tab-stories-list').addEventListener('click', e =>
@@ -774,8 +918,16 @@ class HindiMitraApp {
     );
   }
 
+  generatePreviousWord() {
+    this.generateRandomWord(-1);
+  }
+
+  generateNextWord() {
+    this.generateRandomWord(1);
+  }
+
   // ─── WORDS GENERATOR ─────────────────────────────────────────────────────
-  generateRandomWord() {
+  generateRandomWord(direction = 0) {
     speechEngine.cancel();
     document.getElementById('word-feedback').style.display = 'none';
 
@@ -815,7 +967,30 @@ class HindiMitraApp {
       this.state.wordLength = 'all';
     }
 
-    const selected = filteredList[Math.floor(Math.random() * filteredList.length)];
+    let selected;
+    if (direction === -1) {
+      if (this.state.wordHistoryIndex > 0) {
+        this.state.wordHistoryIndex--;
+        selected = this.state.wordHistory[this.state.wordHistoryIndex];
+      } else {
+        this.updateMascotGreeting('यह पहला शब्द है! आगे बढ़ें। 🐯');
+        return;
+      }
+    } else if (direction === 1) {
+      if (this.state.wordHistoryIndex < this.state.wordHistory.length - 1) {
+        this.state.wordHistoryIndex++;
+        selected = this.state.wordHistory[this.state.wordHistoryIndex];
+      } else {
+        selected = filteredList[Math.floor(Math.random() * filteredList.length)];
+        this.state.wordHistory.push(selected);
+        this.state.wordHistoryIndex = this.state.wordHistory.length - 1;
+      }
+    } else {
+      selected = filteredList[Math.floor(Math.random() * filteredList.length)];
+      this.state.wordHistory = [selected];
+      this.state.wordHistoryIndex = 0;
+    }
+
     this.state.activeWord = selected;
 
     const tag = document.getElementById('word-level-tag');
@@ -887,12 +1062,44 @@ class HindiMitraApp {
     });
   }
 
+  generatePreviousSentence() {
+    this.generateRandomSentence(-1);
+  }
+
+  generateNextSentence() {
+    this.generateRandomSentence(1);
+  }
+
   // ─── SENTENCE GENERATOR ──────────────────────────────────────────────────
-  generateRandomSentence() {
+  generateRandomSentence(direction = 0) {
     speechEngine.cancel();
     document.getElementById('sentence-feedback').style.display = 'none';
     const list = sentences[this.state.level] || sentences.beginner;
-    const sel  = list[Math.floor(Math.random() * list.length)];
+
+    let sel;
+    if (direction === -1) {
+      if (this.state.sentenceHistoryIndex > 0) {
+        this.state.sentenceHistoryIndex--;
+        sel = this.state.sentenceHistory[this.state.sentenceHistoryIndex];
+      } else {
+        this.updateMascotGreeting('यह पहला वाक्य है! आगे बढ़ें। 🐯');
+        return;
+      }
+    } else if (direction === 1) {
+      if (this.state.sentenceHistoryIndex < this.state.sentenceHistory.length - 1) {
+        this.state.sentenceHistoryIndex++;
+        sel = this.state.sentenceHistory[this.state.sentenceHistoryIndex];
+      } else {
+        sel = list[Math.floor(Math.random() * list.length)];
+        this.state.sentenceHistory.push(sel);
+        this.state.sentenceHistoryIndex = this.state.sentenceHistory.length - 1;
+      }
+    } else {
+      sel = list[Math.floor(Math.random() * list.length)];
+      this.state.sentenceHistory = [sel];
+      this.state.sentenceHistoryIndex = 0;
+    }
+
     this.state.activeSentence = sel;
 
     const tag = document.getElementById('sentence-level-tag');

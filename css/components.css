@@ -1,63 +1,53 @@
 /* Hindi Reading Companion: Styled Components & UI Layouts */
 
-/* --- Gamified Level Selector --- */
-.level-selector-wrapper {
-  margin-bottom: 20px;
+/* --- Gamified Level Selector Dropdown --- */
+.level-dropdown-wrapper {
+  position: relative;
   display: flex;
-  flex-direction: column;
-  gap: 8px;
+  align-items: center;
+  flex: 1;
+  max-width: 145px;
+  margin: 0 8px;
 }
 
-.level-selector-label {
+.level-dropdown {
+  width: 100%;
+  padding: 8px 28px 8px 12px;
   font-family: var(--font-fancy);
   font-weight: 800;
   font-size: 14px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.level-toggle-container {
-  display: flex;
+  color: var(--text-main);
   background-color: var(--bg-app);
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
-  padding: 4px;
-  width: 100%;
+  border: 2px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='hsl(215, 16%, 50%)' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 12px;
+  transition: var(--transition-bounce);
 }
 
-.level-btn {
-  flex: 1;
-  background: none;
-  border: none;
-  padding: 8px 6px;
+.level-dropdown:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
+}
+
+.level-dropdown:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.level-dropdown option {
+  background-color: var(--bg-surface);
+  color: var(--text-main);
   font-family: var(--font-fancy);
   font-weight: 800;
-  font-size: 13px;
-  border-radius: calc(var(--radius-md) - 4px);
-  cursor: pointer;
-  color: var(--text-muted);
-  transition: var(--transition-bounce);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
 }
-
-.level-btn:hover {
-  color: var(--text-main);
-}
-
-.level-btn.active {
-  background-color: var(--bg-surface);
-  color: var(--primary);
-  box-shadow: var(--shadow-sm);
-  transform: scale(1.02);
-}
-
-.level-btn.active.beginner { color: var(--success); }
-.level-btn.active.intermediate { color: var(--warning); }
-.level-btn.active.advanced { color: var(--danger); }
 
 /* --- Mascot Companion Section --- */
 .mascot-container {
@@ -824,6 +814,7 @@
 }
 
 .lr-flashcard {
+  position: relative;
   background: linear-gradient(145deg, var(--primary-light), var(--bg-surface));
   border: 3px solid var(--primary);
   border-radius: var(--radius-lg);
@@ -1131,4 +1122,123 @@
   box-shadow: var(--shadow-sm);
   transform: scale(1.02);
 }
+
+/* --- Header Mobile Responsiveness Overrides --- */
+@media (max-width: 380px) {
+  header {
+    padding: 12px 10px !important;
+  }
+  .level-dropdown-wrapper {
+    max-width: 120px;
+    margin: 0 4px;
+  }
+  .level-dropdown {
+    font-size: 12px;
+    padding: 6px 22px 6px 8px;
+    background-position: right 6px center;
+    background-size: 10px;
+  }
+  .logo-text {
+    font-size: 20px;
+  }
+  .btn-icon {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+}
+
+/* --- Translation Toggle Button --- */
+.toggle-translation-btn {
+  background-color: var(--bg-app);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-fancy);
+  font-weight: 700;
+  font-size: 11px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: var(--transition-bounce);
+  height: auto;
+  width: auto;
+}
+
+.toggle-translation-btn:hover {
+  transform: scale(1.05);
+  border-color: var(--primary);
+  color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+.toggle-translation-btn:active {
+  transform: scale(0.95);
+}
+
+/* Card Header Container on top-left (flows naturally to prevent word overlap) */
+.card-header-left {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: -18px;
+  margin-bottom: 12px;
+}
+
+/* Position toggle button absolutely inside letter reading flashcard (since there's no header container there) */
+.lr-flashcard .toggle-translation-btn {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+}
+
+/* Hide Translation Functionality Rules */
+.hide-translations .lr-phonetics,
+.hide-translations #target-word-meaning,
+.hide-translations #target-sentence-meaning {
+  display: none !important;
+}
+
+/* Custom Styled Tooltips [data-tooltip] */
+[data-tooltip] {
+  position: relative;
+}
+
+[data-tooltip]::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 125%;
+  left: 50%;
+  transform: translateX(-50%) scale(0.9);
+  background-color: var(--text-main);
+  color: var(--bg-surface);
+  font-family: var(--font-body);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 6px 10px;
+  border-radius: var(--radius-sm);
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  box-shadow: var(--shadow-md);
+  z-index: 1000;
+  border: 1px solid var(--border);
+}
+
+[data-tooltip]:hover::after {
+  opacity: 1;
+  transform: translateX(-50%) scale(1);
+}
+
+/* Tooltip positioned at the bottom */
+[data-tooltip-pos="bottom"]::after {
+  top: 125%;
+  bottom: auto;
+}
+
+
 
