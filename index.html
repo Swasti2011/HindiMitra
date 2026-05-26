@@ -9,6 +9,9 @@
   <link rel="stylesheet" href="css/main.css">
   <link rel="stylesheet" href="css/components.css">
   <!-- Vercel Web Analytics -->
+  <script>
+    window.va = window.va || function () { (window.vaq = window.vaq || []).push(arguments); };
+  </script>
   <script defer src="/_vercel/insights/script.js"></script>
 </head>
 <body>
@@ -31,10 +34,16 @@
       </div>
 
       <div class="header-actions">
-        <!-- Dark Mode Toggle -->
-        <button id="theme-toggle" class="btn-icon" title="डार्क मोड चालू/बंद करें" aria-label="Toggle dark theme">🌓</button>
-        <!-- Reset Progress -->
-        <button id="reset-progress" class="btn-icon" title="प्रगति रीसेट करें" aria-label="Reset overall stats">🔄</button>
+        <!-- Visitor Counter Badge -->
+        <div class="visitor-badge" id="visitor-badge" data-tooltip="कुल विज़िटर [ / ]" data-tooltip-pos="bottom" title="कुल विज़िटर (Total Visitors)">
+          <span class="visitor-icon" aria-hidden="true">👥</span>
+          <span class="visitor-value" id="visitor-count">...</span>
+        </div>
+        <!-- Settings Control Box -->
+        <div class="settings-box">
+          <button id="theme-toggle" class="settings-btn" title="डार्क मोड चालू/बंद करें" aria-label="Toggle dark theme">🌓</button>
+          <button id="reset-progress" class="settings-btn" title="प्रगति रीसेट करें" aria-label="Reset overall stats">🔄</button>
+        </div>
       </div>
     </header>
 

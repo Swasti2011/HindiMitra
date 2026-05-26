@@ -34,6 +34,10 @@
 - `[x]` Create premium custom CSS tooltips on hover (`[data-tooltip]`) for shortcuts
 - `[x]` Relocate translation toggle button next to the difficulty level tag on the top-left of the card
 - `[x]` Integrate Vercel Web Analytics tag into `index.html` head
+- `[x]` Implement dynamic visitor counter badge in header calling CounterAPI with fallback support
+- `[x]` Group header actions (dark mode, reset) inside a unified settings-box pill and set visitor/level text to normal weight
+
+
 
 
 

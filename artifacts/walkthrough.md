@@ -67,6 +67,7 @@ We created a beautifully responsive, modern **Single-Page Application (SPA)** wi
 * **Chime Audio Synthesizer:** On earning XP, uses the browser's native **Web Audio API** to synthesize a custom success sound, requiring zero external audio assets!
 * **Confetti Bursts:** A lightweight, optimized vector confetti particle engine that runs natively on successful actions.
 * **Theme Support:** Standard toggles between a soft, premium light theme and a sleek dark theme.
+* **Layout Refinements:** Grouped dark mode and progress reset buttons into a unified `.settings-box` pill container, freeing up space in the header for the visitor counter badge. Refactored the difficulty level (dropdown & tags) and visitor count text to use normal (non-bold, `font-weight: 500`) typography for a cleaner, modern look.
 
 ---
 
@@ -78,6 +79,7 @@ We created a beautifully responsive, modern **Single-Page Application (SPA)** wi
 4. **Voice Pronunciation Validator (STT):** Browser native `webkitSpeechRecognition` targeting `'hi-IN'`.
 5. **Chime Effects:** Browser native `AudioContext` frequency oscillator synthesis.
 6. **Analytics:** Vercel Web Analytics via native script insertion.
+7. **Visits API:** CounterAPI integration to fetch and display live visitor counts.
 
 ---
 
@@ -116,11 +118,12 @@ The application is completely self-contained and ready to run inside your browse
 ## 🧪 Testing Checklist
 - [x] **Onboarding & Theme:** Launch the page at `http://localhost:8000`. Toggle the light/dark mode icon on the top right.
 - [x] **Level selection:** Select a level from the dropdown ("🌱 प्रारंभिक", "🌼 मध्यम", "🚀 उन्नत") inside the header. Verify that Chintu the Tiger guides you, the state is persisted, and the active word/sentence is immediately updated to the selected level.
+- [x] **Visitor Counter:** Verify that the visitor count badge (`👥`) loads the current count dynamically from CounterAPI in the header actions block.
 - [x] **Similar-Sounding Letter Reading:** Go to the **🗣️ पठन** tab. Click a group card like `ड/ड़ और त/ट भ्रम`. Use `➡️` to navigate. Try `🔀` (Shuffle) and `🔁` (Restart). Tap `🎤` to speak the letters!
 - [x] **Word Length Selector:** Go to the **शब्द** tab. Click **"छोटे (2-4 अक्षर)"** and check if only short words are loaded. Click **"बड़े (5-10 अक्षर)"** and verify only long words appear.
 - [x] **Word Builder:** Go to the **शब्द** tab. Click **"अक्षर और मात्रा चुनें ▼"**. Tap consonants `क`, `म`, `ल` and pure matra `शुद्ध` or `ा`. Tap **"इन अक्षरों से शब्द खोजें"** and read the custom word generated!
 - [x] **Syllable Reading:** Go to the **शब्द** tab. Tap separate syllables in the green pill box (e.g., `क`, `म`, `ल`) and hear them individually, then tap the speaker button to hear it combined.
-- [x] **Voice Evaluation:** Click the microphone button 🎤, grant microphone permissions, read the displayed word or sentence out loud, and check the colorful speech validation card!
+-[x] **Voice Evaluation:** Click the microphone button 🎤, grant microphone permissions, read the displayed word or sentence out loud, and check the colorful speech validation card!
 - [x] **Interactive Stories:** Go to **कहानी** tab, select "प्यासा कौआ". Tap on the word `कौआ` to see its English meaning ("Crow") and hear it read out. Tap the main speaker button, select "धीमा (Slow)" rate, and watch the yellow karaoke highlight follow the words.
 - [x] **Letter Tracing (Moved to Last):** Go to the **✍️ लेखन** tab (moved to the end of bottom nav), click `क`. Draw on the board and click "जांचें". See your accuracy score and enjoy the confetti!
 - [x] **Translation Toggle & Shortcuts Tooltips:** Hover over any Speak, Mic, Prev, Next, or Eye buttons. Verify that custom tooltip balloons show up containing their keyboard shortcut instructions. Press the `/` key or click the eye icon button to verify that the translations (or phonetics) instantly disappear and reappear.

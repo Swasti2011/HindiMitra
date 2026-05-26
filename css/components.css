@@ -13,8 +13,8 @@
 .level-dropdown {
   width: 100%;
   padding: 8px 28px 8px 12px;
-  font-family: var(--font-fancy);
-  font-weight: 800;
+  font-family: var(--font-body);
+  font-weight: 500;
   font-size: 14px;
   color: var(--text-main);
   background-color: var(--bg-app);
@@ -45,8 +45,8 @@
 .level-dropdown option {
   background-color: var(--bg-surface);
   color: var(--text-main);
-  font-family: var(--font-fancy);
-  font-weight: 800;
+  font-family: var(--font-body);
+  font-weight: 500;
 }
 
 /* --- Mascot Companion Section --- */
@@ -620,7 +620,7 @@
   border-radius: var(--radius-pill);
   width: max-content;
   color: var(--text-muted);
-  font-weight: 700;
+  font-weight: 500;
 }
 
 .story-viewer {
@@ -1146,6 +1146,21 @@
     height: 34px;
     font-size: 16px;
   }
+  .visitor-badge {
+    height: 32px;
+    padding: 4px 8px;
+    font-size: 11px;
+    gap: 4px;
+  }
+  .settings-box {
+    height: 32px;
+    padding: 1px;
+  }
+  .settings-btn {
+    width: 26px;
+    height: 26px;
+    font-size: 13px;
+  }
 }
 
 /* --- Translation Toggle Button --- */
@@ -1238,6 +1253,73 @@
 [data-tooltip-pos="bottom"]::after {
   top: 125%;
   bottom: auto;
+}
+
+/* --- Visitor Badge in Header --- */
+.visitor-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: var(--bg-app);
+  border: 1.5px solid var(--border);
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 13px;
+  color: var(--text-main);
+  height: 38px;
+  box-shadow: var(--shadow-sm);
+  transition: var(--transition-bounce);
+  cursor: default;
+}
+
+.visitor-badge:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  background-color: var(--primary-light);
+  color: var(--primary);
+}
+
+.visitor-icon {
+  font-size: 14px;
+}
+
+/* --- Settings Box (Unified Container for theme and reset) --- */
+.settings-box {
+  display: flex;
+  align-items: center;
+  background-color: var(--bg-app);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-pill);
+  padding: 2px;
+  height: 38px;
+  box-shadow: var(--shadow-sm);
+}
+
+.settings-btn {
+  background: none;
+  border: none;
+  color: var(--text-main);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  transition: var(--transition-bounce);
+}
+
+.settings-btn:hover {
+  background-color: var(--bg-surface);
+  color: var(--primary);
+  transform: scale(1.08);
+}
+
+.settings-btn:active {
+  transform: scale(0.92);
 }
 
 

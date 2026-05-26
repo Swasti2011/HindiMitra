@@ -102,6 +102,7 @@ class HindiMitraApp {
     this.initGlobalKeyListeners();
     this.renderDashboard();
     this.updateMascotGreeting("नमस्ते! मैं चिंटू टाइगर हूँ। चलो आज मिलकर हिंदी पढ़ें! 🐯📖");
+    this.fetchVisitorCount();
   }
 
   initGlobalKeyListeners() {
@@ -284,6 +285,24 @@ class HindiMitraApp {
       btn.setAttribute('data-tooltip', tooltipMsg);
       btn.setAttribute('title', tooltipMsg);
     });
+  }
+  fetchVisitorCount() {
+    fetch('https://api.counterapi.dev/v1/hindimitra/visits/up')
+      .then(res => {
+        if (!res.ok) throw new Error('API Error');
+        return res.json();
+      })
+      .then(data => {
+        const countEl = document.getElementById('visitor-count');
+        if (countEl && data && typeof data.count === 'number') {
+          countEl.innerText = Number(data.count).toLocaleString();
+        }
+      })
+      .catch(err => {
+        console.error('Failed to load visitor count:', err);
+        const badge = document.getElementById('visitor-badge');
+        if (badge) badge.style.display = 'none';
+      });
   }
   resetAllProgress() {
     if (confirm("क्या आप अपनी सारी प्रगति और अंक शून्य करना चाहते हैं?")) {
