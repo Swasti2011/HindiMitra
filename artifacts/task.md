@@ -33,6 +33,8 @@
 - `[x]` Implement hide/show English translation toggling with `/` shortcut and card-level eye icons `👁️`/`🙈`
 - `[x]` Create premium custom CSS tooltips on hover (`[data-tooltip]`) for shortcuts
 - `[x]` Relocate translation toggle button next to the difficulty level tag on the top-left of the card
+- `[x]` Integrate Vercel Web Analytics tag into `index.html` head
+
 
 
 

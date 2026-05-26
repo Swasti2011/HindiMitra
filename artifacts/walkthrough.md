@@ -77,6 +77,16 @@ We created a beautifully responsive, modern **Single-Page Application (SPA)** wi
 3. **Pronunciation Audio (TTS):** Browser native `window.speechSynthesis` configured for `hi-IN` Hindi voice patterns.
 4. **Voice Pronunciation Validator (STT):** Browser native `webkitSpeechRecognition` targeting `'hi-IN'`.
 5. **Chime Effects:** Browser native `AudioContext` frequency oscillator synthesis.
+6. **Analytics:** Vercel Web Analytics via native script insertion.
+
+---
+
+## 📈 Vercel Analytics Setup
+
+This project is pre-configured with Vercel Web Analytics. To start tracking visitors:
+1. **Deploy to Vercel:** Deploy the project using the Vercel Dashboard or CLI (e.g. `vercel`).
+2. **Enable in Dashboard:** Go to your Vercel Dashboard, select your project, click on the **Analytics** tab, and click **Enable Web Analytics**.
+3. **Automatic Tracking:** The included `<script defer src="/_vercel/insights/script.js"></script>` tag in `index.html` will automatically begin logging page views and visitor analytics.
 
 ---
 
